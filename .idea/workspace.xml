@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="333f6752-726a-44f0-bb49-03004167876b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/pocket-movie.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pocketmovie/pocketmovie/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="434">
+              <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pocketmovie/reader/sentence_population.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="130">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pocketmovie/reader/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pocketmovie/writer/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>SECRET</find>
+      <find>normali</find>
+      <find>print</find>
+      <find>contains_name</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/base/base/enums.py" />
+        <option value="$PROJECT_DIR$/base/base/models.py" />
+        <option value="$PROJECT_DIR$/base/reader/models.py" />
+        <option value="$PROJECT_DIR$/base/writer/models.py" />
+        <option value="$PROJECT_DIR$/base/base/settings.py" />
+        <option value="$PROJECT_DIR$/base/manage.py" />
+        <option value="$PROJECT_DIR$/base/settings.py" />
+        <option value="$PROJECT_DIR$/apps/reader/models.py" />
+        <option value="$PROJECT_DIR$/apps/writer/models.py" />
+        <option value="$PROJECT_DIR$/apps/manage.py" />
+        <option value="$PROJECT_DIR$/manage.py" />
+        <option value="$PROJECT_DIR$/base/wsgi.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/base/enums.py" />
+        <option value="$PROJECT_DIR$/reader/models.py" />
+        <option value="$PROJECT_DIR$/writer/models.py" />
+        <option value="$PROJECT_DIR$/reader/test_search.py" />
+        <option value="$PROJECT_DIR$/reader/sentence_population.py" />
+        <option value="$PROJECT_DIR$/pocketmovie/pocketmovie/settings.py" />
+        <option value="$PROJECT_DIR$/pocketmovie/reader/sentence_population.py" />
+        <option value="$PROJECT_DIR$/pocketmovie/reader/models.py" />
+        <option value="$PROJECT_DIR$/pocketmovie/writer/models.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="width" value="1280" />
+    <option name="height" value="800" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+              <item name="reader" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+              <item name="training_data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pocket-movie" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pocket-movie" type="462c0819:PsiDirectoryNode" />
+              <item name="pocketmovie" type="462c0819:PsiDirectoryNode" />
+              <item name="writer" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="333f6752-726a-44f0-bb49-03004167876b" name="Default Changelist" comment="" />
+      <created>1568230643887</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1568230643887</updated>
+      <workItem from="1568230645400" duration="1116000" />
+      <workItem from="1568231782866" duration="56000" />
+      <workItem from="1568232715030" duration="384000" />
+      <workItem from="1568233227195" duration="285000" />
+      <workItem from="1568233531439" duration="828000" />
+      <workItem from="1568235981564" duration="8139000" />
+      <workItem from="1568255785998" duration="122000" />
+      <workItem from="1568577718357" duration="17816000" />
+      <workItem from="1568683833907" duration="7991000" />
+      <workItem from="1568743787272" duration="341000" />
+      <workItem from="1568762244039" duration="694000" />
+      <workItem from="1568854587184" duration="4026000" />
+      <workItem from="1568940288766" duration="1875000" />
+      <workItem from="1569366982232" duration="552000" />
+      <workItem from="1569894934340" duration="7607000" />
+      <workItem from="1569904047973" duration="700000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="52532000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31502423" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/base/base/models.py" />
+    <entry file="file://$PROJECT_DIR$/base/base/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/base/reader/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/django/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/django/core/management/commands/makemigrations.py" />
+    <entry file="file://$PROJECT_DIR$/base/base/enums.py" />
+    <entry file="file://$PROJECT_DIR$/base/writer/apps.py" />
+    <entry file="file://$PROJECT_DIR$/base/base/settings.py" />
+    <entry file="file://$PROJECT_DIR$/base/reader/models.py" />
+    <entry file="file://$PROJECT_DIR$/base/manage.py" />
+    <entry file="file://$PROJECT_DIR$/base/settings.py" />
+    <entry file="file://$PROJECT_DIR$/base/writer/models.py" />
+    <entry file="file://$PROJECT_DIR$/apps/manage.py" />
+    <entry file="file://$PROJECT_DIR$/apps/writer/models.py" />
+    <entry file="file://$PROJECT_DIR$/apps/reader/models.py" />
+    <entry file="file://$PROJECT_DIR$/writer/tests.py" />
+    <entry file="file://$PROJECT_DIR$/writer/apps.py" />
+    <entry file="file://$PROJECT_DIR$/reader/apps.py" />
+    <entry file="file://$PROJECT_DIR$/reader/admin.py" />
+    <entry file="file://$PROJECT_DIR$/reader/views.py" />
+    <entry file="file://$PROJECT_DIR$/manage.py" />
+    <entry file="file://$USER_HOME$/venv/djangodev/lib/python3.6/site-packages/django/conf/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="174" column="31" lean-forward="true" selection-start-line="174" selection-start-column="31" selection-end-line="174" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/base/wsgi.py" />
+    <entry file="file://$PROJECT_DIR$/writer/double_markov_chain.py" />
+    <entry file="file://$PROJECT_DIR$/reader/migrations/0001_initial.py" />
+    <entry file="file://$PROJECT_DIR$/base/enums.py" />
+    <entry file="file://$PROJECT_DIR$/reader/models.py" />
+    <entry file="file://$PROJECT_DIR$/reader/test_search.py" />
+    <entry file="file://$PROJECT_DIR$/writer/migrations/0001_initial.py" />
+    <entry file="file://$USER_HOME$/venv/djangodev/lib/python3.6/site-packages/django/db/backends/sqlite3/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-756" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/writer/models.py" />
+    <entry file="file://$PROJECT_DIR$/reader/sentence_population.py" />
+    <entry file="file://$PROJECT_DIR$/settings.py" />
+    <entry file="file://$PROJECT_DIR$/pocketmovie/reader/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pocketmovie/pocketmovie/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pocketmovie/pocketmovie/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pocketmovie/reader/sentence_population.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pocketmovie/reader/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pocketmovie/writer/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
