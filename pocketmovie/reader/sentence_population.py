@@ -33,7 +33,10 @@ PATH_TO_SCRIPTS = 'training_data/test_scripts/'
 # Back off ngram degrees until existing count is found
 def back_off(counts, ngram, total):
     if len(ngram) == 1:
-        return counts[ngram] / total
+        if ngram in counts:
+            return counts[ngram] / total
+        else:
+            return 1 / total
     elif ngram in counts and ngram[:-1] in counts:
         return counts[ngram] / counts[ngram[:-1]]
     else:
@@ -59,24 +62,20 @@ def contains_name(doc, all_names):
 
 
 # Store new counts for ngrams as dictionary values
-def count_ngrams(type_counts, context_counts, type_ngram, context_ngram, sentence_type, sentence_context, flag):
-    if flag == sentence_context:
-        type_ngram += (sentence_type,)
-        context_ngram += (sentence_context,)
-    else:
-        type_ngram = (sentence_type,)
-        context_ngram = (sentence_context,)
+def count_ngrams(type_counts, context_counts, type_ngram, context_ngram, sentence_type, sentence_context):
+    type_ngram += (sentence_type,)
+    context_ngram += (sentence_context,)
     type_ngram = type_ngram[-3:] if len(type_ngram) > 3 else type_ngram
     context_ngram = context_ngram[-3:] if len(context_ngram) > 3 else context_ngram
-    if type_ngram in type_counts.keys():
+    if type_ngram in type_counts:
         type_counts[type_ngram] += 1
     else:
         type_counts[type_ngram] = 1
-    if context_ngram in context_counts.keys():
+    if context_ngram in context_counts:
         context_counts[context_ngram] += 1
     else:
         context_counts[context_ngram] = 1
-    return type_ngram, context_ngram, sentence_context
+    return type_ngram, context_ngram
 
 
 # Retrieves lexicon of 94,000 most common US names, courtesy Social Security database
@@ -107,6 +106,9 @@ def is_direction(text):
 
 # Include ngram counts in database as KeyValue objects
 def unpack_counts(type_counts, context_counts, total, genre):
+    # Crude smoothing
+    for type_count in type_counts:
+        type_counts[type_count] += 1
     # Calculate ngram probabilities for types
     for type_count in type_counts:
         if len(type_count) == 1:
@@ -130,8 +132,13 @@ def unpack_counts(type_counts, context_counts, total, genre):
                 gram_3=type_count[2],
                 probability=back_off(type_counts, type_count, total)
             )
+    # Crude smoothing
+    for context_count in context_counts:
+        context_counts[context_count] += 1
     # Calculate ngram probabilities for contexts
     for context_count in context_counts:
+        # Crude smoothing
+        context_counts[context_count] += 1
         if len(context_count) == 1:
             w_models.ContextUnigramKeyValue.objects.get_or_create(
                 genre=genre,
@@ -174,25 +181,24 @@ def populate_script_sentences():
             total += len(sentences)
             type_ngram = ()
             context_ngram = ()
-            flag = SentenceContext.DESCRIPTION
             for sentence in sentences:
                 # Avoid chronological discontinuity
                 if not contains_date(sentence):
                     sentence_type = classify_type(sentence)
                     # TODO: pass sentence text to model (return member of SentenceType enum)
                     doc = NLP(sentence)
-                    print('\n**sentence: {0}\n'.format(re.escape(sentence)))
                     if is_actor_name(sentence):
                         # Sentence is an actor name
-                        type_ngram, context_ngram, flag = count_ngrams(type_counts, context_counts, type_ngram,
-                                                                       context_ngram, sentence_type,
-                                                                       SentenceContext.ACTOR_NAME, flag)
+                        type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
+                                                                 context_ngram, sentence_type,
+                                                                 SentenceContext.ACTOR_NAME)
                         trailing_dialogue = ACTOR_NAME_REGEX.search(sentence)
                         if trailing_dialogue.group(2):
                             next_sentence_type = classify_type(trailing_dialogue.group(2))
-                            type_ngram, context_ngram, flag = count_ngrams(type_counts, context_counts, type_ngram,
-                                                                           context_ngram, next_sentence_type,
-                                                                           SentenceContext.DIALOGUE, flag)
+                            type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
+                                                                     context_ngram, next_sentence_type,
+                                                                     SentenceContext.DIALOGUE)
+                            doc = NLP(trailing_dialogue.group(2))
                             if not contains_name(doc, us_names):
                                 Sentence.objects.get_or_create(
                                     text=trailing_dialogue.group(2),
@@ -200,12 +206,11 @@ def populate_script_sentences():
                                     sentence_context=SentenceContext.DIALOGUE,
                                     sentence_type=next_sentence_type
                                 )
-                                print('\n**Stored as dialogue\n')
                     elif is_direction(sentence):
                         # Sentence is a direction
-                        type_ngram, context_ngram, flag = count_ngrams(type_counts, context_counts, type_ngram,
-                                                                       context_ngram, sentence_type,
-                                                                       SentenceContext.DIRECTION, flag)
+                        type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
+                                                                 context_ngram, sentence_type,
+                                                                 SentenceContext.DIRECTION)
                         if not has_direct_address(sentence) and not contains_name(doc, us_names):
                             Sentence.objects.get_or_create(
                                 text=sentence,
@@ -213,13 +218,12 @@ def populate_script_sentences():
                                 sentence_context=SentenceContext.DIRECTION,
                                 sentence_type=sentence_type
                             )
-                            print('\n**Stored as direction\n')
                     elif not contains_name(doc, us_names):
                         # Avoid social/geographic discontinuities
                         # Sentence is most likely a description
-                        type_ngram, context_ngram, flag = count_ngrams(type_counts, context_counts, type_ngram,
-                                                                       context_ngram, sentence_type,
-                                                                       SentenceContext.DESCRIPTION, flag)
+                        type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
+                                                                 context_ngram, sentence_type,
+                                                                 SentenceContext.DESCRIPTION)
                         if not has_direct_address(sentence) and not contains_name(doc, us_names):
                             Sentence.objects.get_or_create(
                                 text=sentence,
@@ -227,9 +231,6 @@ def populate_script_sentences():
                                 sentence_context=SentenceContext.DESCRIPTION,
                                 sentence_type=sentence_type
                             )
-                            print('\n**Stored as description\n')
-        print(str(type_counts) + '\n')
-        print(context_counts)
         unpack_counts(type_counts, context_counts, total, genre)
 
 
