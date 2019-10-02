@@ -140,8 +140,6 @@ def unpack_counts(type_counts, context_counts, total, genre):
         context_counts[context_count] += 1
     # Calculate ngram probabilities for contexts
     for context_count in context_counts:
-        # Crude smoothing
-        context_counts[context_count] += 1
         if len(context_count) == 1:
             w_models.ContextUnigramKeyValue.objects.get_or_create(
                 genre=genre,
