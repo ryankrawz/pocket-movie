@@ -25,8 +25,6 @@ DATE_REGEX = re.compile(r'(January|Jan|February|Feb|March|Mar|April|Apr|May|June
 
 UPPERCASE_REGEX = re.compile(r'[A-Z]{3,}')
 
-NLP = spacy.load('en_core_web_sm')
-
 PATH_TO_SCRIPTS = 'training_data/test_scripts/'
 
 
@@ -78,7 +76,7 @@ def count_ngrams(type_counts, context_counts, type_ngram, context_ngram, sentenc
     return type_ngram, context_ngram
 
 
-# Retrieves lexicon of 94,000 most common US names, courtesy Social Security database
+# Retrieve lexicon of 94,000 most common US names, courtesy Social Security database
 def get_us_names():
     us_names = list(pd.DataFrame(pd.read_csv('reader/NationalNames.csv'))['Name'])
     for index, _ in enumerate(us_names):
@@ -102,6 +100,11 @@ def is_actor_name(text):
 # Customary for directions to be in all upper case
 def is_direction(text):
     return bool(UPPERCASE_REGEX.search(text))
+
+
+# Retrieve Spacy linguistics analysis package
+def load_spacy():
+    return spacy.load('en_core_web_sm')
 
 
 # Include ngram counts in database as KeyValue objects
@@ -163,6 +166,7 @@ def unpack_counts(type_counts, context_counts, total, genre):
 
 
 def populate_script_sentences():
+    nlp = load_spacy()
     us_names = get_us_names()
     # Script directories by genre for all genres in genre enum
     for genre in Genre:
@@ -186,7 +190,7 @@ def populate_script_sentences():
                 if not contains_date(sentence):
                     sentence_type = classify_type(sentence)
                     # TODO: pass sentence text to model (return member of SentenceType enum)
-                    doc = NLP(sentence)
+                    doc = nlp(sentence)
                     if is_actor_name(sentence):
                         # Sentence is an actor name
                         type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
@@ -198,7 +202,7 @@ def populate_script_sentences():
                             type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                      context_ngram, next_sentence_type,
                                                                      SentenceContext.DIALOGUE)
-                            doc = NLP(trailing_dialogue.group(2))
+                            doc = nlp(trailing_dialogue.group(2))
                             if not contains_name(doc, us_names):
                                 Sentence.objects.get_or_create(
                                     text=trailing_dialogue.group(2),
