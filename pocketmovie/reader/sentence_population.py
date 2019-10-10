@@ -65,14 +65,16 @@ def count_ngrams(type_counts, context_counts, type_ngram, context_ngram, sentenc
     context_ngram += (sentence_context,)
     type_ngram = type_ngram[-3:] if len(type_ngram) > 3 else type_ngram
     context_ngram = context_ngram[-3:] if len(context_ngram) > 3 else context_ngram
-    if type_ngram in type_counts:
-        type_counts[type_ngram] += 1
-    else:
-        type_counts[type_ngram] = 1
-    if context_ngram in context_counts:
-        context_counts[context_ngram] += 1
-    else:
-        context_counts[context_ngram] = 1
+    for index in range(len(type_ngram)):
+        if type_ngram[:index + 1] in type_counts:
+            type_counts[type_ngram[:index + 1]] += 1
+        else:
+            type_counts[type_ngram[:index + 1]] = 1
+    for index in range(len(context_ngram)):
+        if context_ngram[:index + 1] in context_counts:
+            context_counts[context_ngram[:index + 1]] += 1
+        else:
+            context_counts[context_ngram[:index + 1]] = 1
     return type_ngram, context_ngram
 
 
