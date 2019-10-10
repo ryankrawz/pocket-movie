@@ -6,7 +6,7 @@ import pandas as pd
 import spacy
 
 from pocketmovie.enums import Genre, SentenceContext, SentenceType
-from reader.models import Sentence
+from reader.models import Sentence, StartSymbol
 import writer.models as w_models
 
 
@@ -187,6 +187,7 @@ def populate_script_sentences():
                 # Avoid chronological discontinuity
                 if not contains_date(sentence):
                     sentence_type = classify_type(sentence)
+                    current_context = None
                     # TODO: pass sentence text to model (return member of SentenceType enum)
                     doc = nlp(sentence)
                     if is_actor_name(sentence):
@@ -194,12 +195,14 @@ def populate_script_sentences():
                         type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                  context_ngram, sentence_type,
                                                                  SentenceContext.ACTOR_NAME)
+                        current_context = SentenceContext.ACTOR_NAME
                         trailing_dialogue = ACTOR_NAME_REGEX.search(sentence)
                         if trailing_dialogue.group(2):
                             next_sentence_type = classify_type(trailing_dialogue.group(2))
                             type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                      context_ngram, next_sentence_type,
                                                                      SentenceContext.DIALOGUE)
+                            current_context = SentenceContext.DIALOGUE
                             doc = nlp(trailing_dialogue.group(2))
                             if not contains_name(doc, us_names):
                                 Sentence.objects.get_or_create(
@@ -213,6 +216,7 @@ def populate_script_sentences():
                         type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                  context_ngram, sentence_type,
                                                                  SentenceContext.DIRECTION)
+                        current_context = SentenceContext.DIRECTION
                         if not has_direct_address(sentence) and not contains_name(doc, us_names):
                             Sentence.objects.get_or_create(
                                 text=sentence,
@@ -226,6 +230,7 @@ def populate_script_sentences():
                         type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                  context_ngram, sentence_type,
                                                                  SentenceContext.DESCRIPTION)
+                        current_context = SentenceContext.DESCRIPTION
                         if not has_direct_address(sentence) and not contains_name(doc, us_names):
                             Sentence.objects.get_or_create(
                                 text=sentence,
@@ -233,6 +238,14 @@ def populate_script_sentences():
                                 sentence_context=SentenceContext.DESCRIPTION,
                                 sentence_type=sentence_type
                             )
+                    if current_context:
+                        # Track starting sentence types for each context
+                        start, _ = StartSymbol.objects.get_or_create(
+                            sentence_context=current_context,
+                            sentence_type=sentence_type
+                        )
+                        start.count += 1
+                        start.save()
         unpack_counts(type_counts, context_counts, total, genre)
 
 
