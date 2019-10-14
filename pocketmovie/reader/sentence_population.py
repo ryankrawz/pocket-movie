@@ -194,12 +194,9 @@ def populate_script_sentences():
                     doc = nlp(sentence)
                     if is_actor_name(sentence):
                         # Sentence is an actor name
-                        type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
-                                                                 context_ngram, sentence_type,
-                                                                 SentenceContext.ACTOR_NAME)
-                        current_context = SentenceContext.ACTOR_NAME
                         trailing_dialogue = ACTOR_NAME_REGEX.search(sentence)
                         if trailing_dialogue.group(2):
+                            # Actor name is followed by dialogue
                             next_sentence_type = classify_type(trailing_dialogue.group(2))
                             type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                      context_ngram, next_sentence_type,

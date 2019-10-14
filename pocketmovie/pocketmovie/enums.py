@@ -11,7 +11,6 @@ class SentenceContext(Enum):
     DESCRIPTION = 'description'
     DIALOGUE = 'dialogue'
     DIRECTION = 'direction'
-    ACTOR_NAME = 'actor_name'
 
 
 class SentenceType(Enum):

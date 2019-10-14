@@ -26,8 +26,6 @@ class DoubleMarkov:
 
     # Query for sentence with corresponding context/type
     def get_sentence(self, current_context, current_type):
-        if current_context == SentenceContext.ACTOR_NAME:
-            current_context = str(SentenceContext.DIALOGUE)
         matching_sentences = self.sentences.filter(
             sentence_context=current_context,
             sentence_type=current_type
