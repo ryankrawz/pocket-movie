@@ -180,8 +180,8 @@ def populate_script_sentences():
             print('Parsing file: {0}'.format(name))
             with open(root + name, 'r') as f:
                 script_text = f.read().strip()
-            # Sentence tokens of script, excluding title
-            sentences = nltk.sent_tokenize(script_text)[1:]
+            # Sentence tokens of script, excluding title and ending
+            sentences = nltk.sent_tokenize(script_text)[1:-1]
             total += len(sentences)
             type_ngram = ()
             context_ngram = ()
