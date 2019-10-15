@@ -25,7 +25,7 @@ DATE_REGEX = re.compile(r'(January|Jan|February|Feb|March|Mar|April|Apr|May|June
 
 UPPERCASE_REGEX = re.compile(r'[A-Z]{3,}')
 
-PATH_TO_SCRIPTS = 'training_data/test_scripts/'
+PATH_TO_SCRIPTS = 'training_data/raw_text_scripts/'
 
 
 # Back off ngram degrees until existing count is found
