@@ -25,7 +25,7 @@ class DoubleMarkov:
         self.sentences = Sentence.objects.filter(genre=genre)
 
     # Query for sentence with corresponding context/type
-    def get_sentence(self, current_context, current_type):
+    def get_sentence(self, current_context, current_type, current_character):
         matching_sentences = self.sentences.filter(
             sentence_context=current_context,
             sentence_type=current_type
@@ -36,9 +36,13 @@ class DoubleMarkov:
         if matching_sentences:
             current_text = choice(matching_sentences).strip()
             if current_context == str(SentenceContext.DIALOGUE) and current_text:
-                current_text = '\n\n{0}:\n\t"{1}"\n\n'.format(choice(self.characters), current_text)
-            return current_text + ' '
-        return ''
+                next_character = choice(self.characters)
+                while next_character == current_character:
+                    next_character = choice(self.characters)
+                current_character = next_character
+                current_text = '\n\n{0}:\n\t"{1}"\n\n'.format(current_character, current_text)
+            return current_text + ' ', current_character
+        return '', current_character
 
     @staticmethod
     # Convert start symbol counts to probabilities for scalability, return chosen type
@@ -53,6 +57,7 @@ class DoubleMarkov:
     # Retrieve usable sentences for script from database
     def produce_sentences(self, all_contexts):
         payload = ''
+        current_character = ''
         # Iterate through available context sequence and generate types considering identical subsequent contexts
         for index, context in enumerate(all_contexts):
             try:
@@ -81,7 +86,8 @@ class DoubleMarkov:
             except IndexError:
                 target_type = self.weighted_random(self.type_unigrams)
                 self.current_type_ngram = (target_type.gram_1,)
-            payload += self.get_sentence(context, self.current_type_ngram[-1])
+            next_sentence, current_character = self.get_sentence(context, self.current_type_ngram[-1], current_character)
+            payload += next_sentence
         return payload
 
     @staticmethod

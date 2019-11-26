@@ -10,20 +10,14 @@ from reader.models import Sentence, StartSymbol
 import writer.models as w_models
 
 
-# TODO: delete once model is successfully trained
-from random import randint
-def random_type():
-    types = [t.value for t in SentenceType]
-    rand_type = types[randint(0, 3)]
-    return SentenceType(rand_type)
-
-
 ACTOR_NAME_REGEX = re.compile(r'([A-Z]+)[\n\r]+(.*)')
 
 DATE_REGEX = re.compile(r'(January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|'
                         r'September|Sept|Sep|October|Oct|November|Nov|December|Dec) \d{1,2},? \d{2,4}')
 
 UPPERCASE_REGEX = re.compile(r'[A-Z]{3,}')
+
+WEBSITE_REGEX = re.compile(r'\.(com|org|net|io|co|us)', re.IGNORECASE)
 
 PATH_TO_SCRIPTS = 'training_data/raw_text_scripts/'
 
@@ -41,10 +35,16 @@ def back_off(counts, ngram, total):
         return back_off(counts, ngram[:-1], total)
 
 
-# Return sentence type predicted by neural network
-def classify_type(text):
-    return random_type()
-    pass  # TODO: train neural network
+# Return sentence type predicted by expression characteristics
+def classify_type(text, doc):
+    if text.strip().endswith('?'):
+        return SentenceType.INTERROGATIVE
+    elif text.strip().endswith('!'):
+        return SentenceType.EXCLAMATORY
+    elif doc[0].pos_ == 'VERB':
+        return SentenceType.IMPERATIVE
+    else:
+        return SentenceType.DECLARATIVE
 
 
 # Search for simple date formatting
@@ -57,6 +57,11 @@ def contains_name(doc, all_names):
     return any([(token.pos_ == 'PROPN' or
                 token.text.upper() in all_names)
                 for token in doc])
+
+
+# Search for a URL pattern
+def contains_website(text):
+    return bool(WEBSITE_REGEX.search(text))
 
 
 # Store new counts for ngrams as dictionary values
@@ -95,7 +100,7 @@ def has_direct_address(text):
 def is_actor_name(text):
     name_search = ACTOR_NAME_REGEX.search(text)
     if name_search:
-        return not is_direction(name_search.group(2))
+        return not (is_direction(name_search.group(2)) or name_search.group(2).strip()[0] == '(')
     return False
 
 
@@ -187,25 +192,25 @@ def populate_script_sentences():
             context_ngram = ()
             for sentence in sentences:
                 # Avoid chronological discontinuity
-                if not contains_date(sentence):
-                    sentence_type = classify_type(sentence)
-                    current_context = None
-                    # TODO: pass sentence text to model (return member of SentenceType enum)
+                if not (contains_date(sentence) or contains_website(sentence)):
                     doc = nlp(sentence)
+                    sentence_type = classify_type(sentence, doc)
+                    current_context = None
                     if is_actor_name(sentence):
                         # Sentence is an actor name
                         trailing_dialogue = ACTOR_NAME_REGEX.search(sentence)
                         if trailing_dialogue.group(2):
                             # Actor name is followed by dialogue
-                            next_sentence_type = classify_type(trailing_dialogue.group(2))
+                            dialogue_text = trailing_dialogue.group(2)
+                            next_sentence_type = classify_type(trailing_dialogue.group(2), doc)
                             type_ngram, context_ngram = count_ngrams(type_counts, context_counts, type_ngram,
                                                                      context_ngram, next_sentence_type,
                                                                      SentenceContext.DIALOGUE)
                             current_context = SentenceContext.DIALOGUE
-                            doc = nlp(trailing_dialogue.group(2))
+                            doc = nlp(dialogue_text)
                             if not contains_name(doc, us_names):
                                 Sentence.objects.get_or_create(
-                                    text=trailing_dialogue.group(2),
+                                    text=dialogue_text,
                                     genre=genre,
                                     sentence_context=SentenceContext.DIALOGUE,
                                     sentence_type=next_sentence_type
@@ -216,7 +221,9 @@ def populate_script_sentences():
                                                                  context_ngram, sentence_type,
                                                                  SentenceContext.DIRECTION)
                         current_context = SentenceContext.DIRECTION
-                        if not has_direct_address(sentence) and not contains_name(doc, us_names):
+                        if not (has_direct_address(sentence)
+                                or contains_name(doc, us_names)
+                                or '(' in sentence):
                             Sentence.objects.get_or_create(
                                 text=sentence,
                                 genre=genre,
@@ -230,7 +237,7 @@ def populate_script_sentences():
                                                                  context_ngram, sentence_type,
                                                                  SentenceContext.DESCRIPTION)
                         current_context = SentenceContext.DESCRIPTION
-                        if not has_direct_address(sentence) and not contains_name(doc, us_names):
+                        if not (has_direct_address(sentence) or contains_name(doc, us_names)):
                             Sentence.objects.get_or_create(
                                 text=sentence,
                                 genre=genre,
