@@ -12,8 +12,7 @@ import writer.models as w_models
 
 ACTOR_NAME_REGEX = re.compile(r'([A-Z]+)[\n\r]+(.*)')
 
-DATE_REGEX = re.compile(r'(January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|'
-                        r'September|Sept|Sep|October|Oct|November|Nov|December|Dec) \d{1,2},? \d{2,4}')
+NUMBER_REGEX = re.compile(r'\d')
 
 UPPERCASE_REGEX = re.compile(r'[A-Z]{3,}')
 
@@ -47,9 +46,9 @@ def classify_type(text, doc):
         return SentenceType.DECLARATIVE
 
 
-# Search for simple date formatting
-def contains_date(text):
-    return bool(DATE_REGEX.search(text))
+# Search for number
+def contains_number(text):
+    return bool(NUMBER_REGEX.search(text))
 
 
 # Check for human name in words
@@ -192,7 +191,7 @@ def populate_script_sentences():
             context_ngram = ()
             for sentence in sentences:
                 # Avoid chronological discontinuity
-                if not (contains_date(sentence) or contains_website(sentence)):
+                if not (contains_number(sentence) or contains_website(sentence)):
                     doc = nlp(sentence)
                     sentence_type = classify_type(sentence, doc)
                     current_context = None
@@ -253,6 +252,3 @@ def populate_script_sentences():
                         start.count += 1
                         start.save()
         unpack_counts(type_counts, context_counts, total, genre)
-
-
-populate_script_sentences()
