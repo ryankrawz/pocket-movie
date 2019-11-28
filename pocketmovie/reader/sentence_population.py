@@ -11,13 +11,9 @@ import writer.models as w_models
 
 
 ACTOR_NAME_REGEX = re.compile(r'([A-Z]+)[\n\r]+(.*)')
-
 NUMBER_REGEX = re.compile(r'\d')
-
 UPPERCASE_REGEX = re.compile(r'[A-Z]{3,}')
-
 WEBSITE_REGEX = re.compile(r'\.(com|org|net|io|co|us)', re.IGNORECASE)
-
 PATH_TO_SCRIPTS = 'training_data/raw_text_scripts/'
 
 

@@ -1,0 +1,7 @@
+en_core_web_sm
+nltk
+numpy
+pandas
+spacy
+setuptools
+tensorflow

@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="192e5b3e-1e01-4c1b-83ec-a7bc10c67fd6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependencies.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/reader/classification_network.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/reader/sentence_population.py" beforeDir="false" afterPath="$PROJECT_DIR$/reader/sentence_population.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -66,7 +68,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -138,7 +140,8 @@
       <workItem from="1572283946780" duration="2397000" />
       <workItem from="1572474324259" duration="22000" />
       <workItem from="1574727465023" duration="3596000" />
-      <workItem from="1574817953612" duration="271000" />
+      <workItem from="1574817953612" duration="365000" />
+      <workItem from="1574894719516" duration="12473000" />
     </task>
     <servers />
   </component>
@@ -153,6 +156,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="requirements.txt" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
