@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="192e5b3e-1e01-4c1b-83ec-a7bc10c67fd6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependencies.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reader/classification_network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reader/sentence_population.py" beforeDir="false" afterPath="$PROJECT_DIR$/reader/sentence_population.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reader/sentence_generation_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/reader/sentence_generation_model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -141,7 +138,8 @@
       <workItem from="1572474324259" duration="22000" />
       <workItem from="1574727465023" duration="3596000" />
       <workItem from="1574817953612" duration="365000" />
-      <workItem from="1574894719516" duration="12473000" />
+      <workItem from="1574894719516" duration="12791000" />
+      <workItem from="1574959892716" duration="130000" />
     </task>
     <servers />
   </component>
