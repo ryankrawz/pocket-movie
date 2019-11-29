@@ -4,13 +4,16 @@ import numpy as np
 import tensorflow as tf
 
 
+tf.compat.v1.enable_eager_execution()
+
+
 BATCH_SIZE = 64
 BUFFER_SIZE = 10000
-CHARS_TO_GENERATE = 200
+CHARS_TO_GENERATE = 100
 CHECKPOINT_DIR = './training_data/training_checkpoints'
 CHECKPOINT_PREFIX = os.path.join(CHECKPOINT_DIR, 'cpt_{epoch}')
 EMBEDDING_DIMENSIONS = 256
-EPOCHS = 7
+EPOCHS = 5
 INPUT_LENGTH = 100
 PATH_TO_TRAINING_SCRIPT = 'training_data/raw_text_scripts/all_scripts_continuous.txt'
 RNN_UNITS = 1024
@@ -47,7 +50,7 @@ def initialize_model():
         ))
     vocab = sorted(set(get_script_text()))
     model = build_model(len(vocab), 1)
-    model.load_weights(last_checkpoint)
+    model.load_weights(last_checkpoint).expect_partial()
     model.build(tf.TensorShape([1, None]))
     return model
 
