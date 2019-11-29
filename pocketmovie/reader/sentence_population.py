@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 import nltk
 import pandas as pd
@@ -177,7 +178,10 @@ def populate_script_sentences():
         file_names = os.listdir(root)
         # Scripts in each genre directory
         for name in file_names:
-            print('Parsing file: {0}'.format(name))
+            # Print current file to console
+            sys.stdout.write('\r')
+            sys.stdout.write('Parsing file (%s): %s%s' % (genre.value, name, 20 * ' '))
+            sys.stdout.flush()
             with open(root + name, 'r') as f:
                 script_text = f.read().strip()
             # Sentence tokens of script, excluding title and ending
@@ -248,3 +252,4 @@ def populate_script_sentences():
                         start.count += 1
                         start.save()
         unpack_counts(type_counts, context_counts, total, genre)
+    sys.stdout.write('\n')

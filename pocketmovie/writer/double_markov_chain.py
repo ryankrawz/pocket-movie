@@ -1,16 +1,17 @@
 from random import choice
+import sys
 
 from nltk.metrics.distance import edit_distance
 
 from pocketmovie.enums import SentenceContext
 from reader.models import Sentence, StartSymbol
-from reader.sentence_generation_model import SentenceGenerationRNN
+from writer.sentence_generation_model import SentenceGenerationRNN
 import writer.models as w_models
 
 
 class DoubleMarkov:
     # Limit for length of movie script
-    CONTEXT_COUNT_CEILING = 100
+    CONTEXT_COUNT_CEILING = 50
     # Limit for input size of neural language model
     RNN_INPUT_CEILING = 100
 
@@ -65,12 +66,12 @@ class DoubleMarkov:
     def __match_sentence_to_guide(self, all_text, matching_sentences):
         inference_text = all_text[-self.RNN_INPUT_CEILING:] if len(all_text) > self.RNN_INPUT_CEILING else all_text
         guide_text = self.rnn.generate_text(inference_text)
-        current_text = matching_sentences[0]
-        current_distance = edit_distance(guide_text, current_text)
-        for sentence_text in matching_sentences[1:]:
+        current_text = ''
+        current_distance = 0
+        for sentence_text in matching_sentences:
             if sentence_text not in all_text:
                 new_distance = edit_distance(guide_text, sentence_text)
-                if new_distance < current_distance:
+                if not current_text or new_distance < current_distance:
                     current_text = sentence_text
                     current_distance = new_distance
         return current_text.strip()
@@ -81,7 +82,13 @@ class DoubleMarkov:
         current_character = ''
         # Iterate through available context sequence and generate types considering identical subsequent contexts
         for index, context in enumerate(all_contexts):
-            print('Generating script: {0:.1%}'.format((index + 1) / self.CONTEXT_COUNT_CEILING))
+            # Print progress bar to console
+            sys.stdout.write('\r')
+            complete = (index + 1) / self.CONTEXT_COUNT_CEILING
+            sys.stdout.write('Generating script: [%-50s] %.1f%%' % ('=' * int(50 * complete), 100 * complete))
+            if complete == 1:
+                sys.stdout.write('\n')
+            sys.stdout.flush()
             try:
                 if index == 0 or context != all_contexts[index - 1]:
                     self.current_type_ngram = (self.__get_start_type(context),)
