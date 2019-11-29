@@ -18,7 +18,6 @@ class SentenceGenerationRNN:
     INPUT_LENGTH = 100
     PATH_TO_TRAINING_SCRIPT = 'training_data/raw_text_scripts/all_scripts_continuous.txt'
     RNN_UNITS = 1024
-    S_1, S_2 = 342, 400
     TEMPERATURE = 1.0
 
     def __init__(self):
