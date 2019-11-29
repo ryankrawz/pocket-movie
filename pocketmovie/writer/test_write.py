@@ -10,5 +10,6 @@ with open('markov_output.txt', 'w+') as f:
         'Jeff',
         'Megan',
     ]
-    output_chain = DoubleMarkov(Genre.HORROR, 'The Big Scary', 'Tennessee Williams', characters)
+    start = 'Death goes by many names.'
+    output_chain = DoubleMarkov(Genre.HORROR, 'The Big Scary', 'Tennessee Williams', characters, start)
     f.write(output_chain.generate_output())

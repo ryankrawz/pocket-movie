@@ -1,19 +1,25 @@
 from random import choice
 
+from nltk.metrics.distance import edit_distance
+
 from pocketmovie.enums import SentenceContext
 from reader.models import Sentence, StartSymbol
+from reader.sentence_generation_model import SentenceGenerationRNN
 import writer.models as w_models
 
 
 class DoubleMarkov:
     # Limit for length of movie script
-    CONTEXT_COUNT_CEILING = 500
+    CONTEXT_COUNT_CEILING = 100
+    # Limit for input size of neural language model
+    RNN_INPUT_CEILING = 100
 
     # Initialize context/type ngrams relevant to genre
-    def __init__(self, genre, title, author, characters):
+    def __init__(self, genre, title, author, characters, start_sentence):
         self.title = title.strip().upper()
         self.author = author.strip()
         self.characters = [character.strip().upper() for character in characters]
+        self.start_sentence = start_sentence + ' '
         self.current_context_ngram = ()
         self.current_type_ngram = ()
         self.context_unigrams = w_models.ContextUnigramKeyValue.objects.filter(genre=genre)
@@ -23,9 +29,10 @@ class DoubleMarkov:
         self.type_bigrams = w_models.TypeBigramKeyValue.objects.filter(genre=genre)
         self.type_trigrams = w_models.TypeTrigramKeyValue.objects.filter(genre=genre)
         self.sentences = Sentence.objects.filter(genre=genre)
+        self.rnn = SentenceGenerationRNN()
 
     # Query for sentence with corresponding context/type
-    def get_sentence(self, current_context, current_type, current_character):
+    def __get_sentence(self, all_text, current_context, current_type, current_character):
         matching_sentences = self.sentences.filter(
             sentence_context=current_context,
             sentence_type=current_type
@@ -34,7 +41,7 @@ class DoubleMarkov:
             flat=True
         ).distinct()
         if matching_sentences:
-            current_text = choice(matching_sentences).strip()
+            current_text = self.__match_sentence_to_guide(all_text, matching_sentences)
             if current_context == str(SentenceContext.DIALOGUE) and current_text:
                 next_character = choice(self.characters)
                 while next_character == current_character:
@@ -46,7 +53,7 @@ class DoubleMarkov:
 
     @staticmethod
     # Convert start symbol counts to probabilities for scalability, return chosen type
-    def get_start_type(context):
+    def __get_start_type(context):
         start_symbols = StartSymbol.objects.filter(sentence_context=context)
         total = sum([start.count for start in start_symbols])
         type_list = []
@@ -54,45 +61,65 @@ class DoubleMarkov:
             type_list += [start.sentence_type] * int((start.count / total) * 100)
         return choice(type_list)
 
+    # Identify sentence with lowest edit distance to guide sentence from neural model
+    def __match_sentence_to_guide(self, all_text, matching_sentences):
+        inference_text = all_text[-self.RNN_INPUT_CEILING:] if len(all_text) > self.RNN_INPUT_CEILING else all_text
+        guide_text = self.rnn.generate_text(inference_text)
+        current_text = matching_sentences[0]
+        current_distance = edit_distance(guide_text, current_text)
+        for sentence_text in matching_sentences[1:]:
+            if sentence_text not in all_text:
+                new_distance = edit_distance(guide_text, sentence_text)
+                if new_distance < current_distance:
+                    current_text = sentence_text
+                    current_distance = new_distance
+        return current_text.strip()
+
     # Retrieve usable sentences for script from database
-    def produce_sentences(self, all_contexts):
-        payload = ''
+    def __produce_sentences(self, all_contexts):
+        payload = self.start_sentence
         current_character = ''
         # Iterate through available context sequence and generate types considering identical subsequent contexts
         for index, context in enumerate(all_contexts):
+            print('Generating script: {0:.1%}'.format((index + 1) / self.CONTEXT_COUNT_CEILING))
             try:
                 if index == 0 or context != all_contexts[index - 1]:
-                    self.current_type_ngram = (self.get_start_type(context),)
+                    self.current_type_ngram = (self.__get_start_type(context),)
                 elif len(self.current_type_ngram) == 1:
-                    target_type = self.weighted_random(self.type_bigrams.filter(
+                    target_type = self.__weighted_random(self.type_bigrams.filter(
                         gram_1=self.current_type_ngram[0]
                     ))
                     self.current_type_ngram = (target_type.gram_1, target_type.gram_2)
                 elif len(self.current_type_ngram) == 2:
-                    target_type = self.weighted_random(self.type_trigrams.filter(
+                    target_type = self.__weighted_random(self.type_trigrams.filter(
                         gram_1=self.current_type_ngram[0],
                         gram_2=self.current_type_ngram[1]
                     ))
                     self.current_type_ngram = (target_type.gram_1, target_type.gram_2, target_type.gram_3)
                 elif len(self.current_type_ngram) == 3:
-                    target_type = self.weighted_random(self.type_trigrams.filter(
+                    target_type = self.__weighted_random(self.type_trigrams.filter(
                         gram_1=self.current_type_ngram[1],
                         gram_2=self.current_type_ngram[2]
                     ))
                     self.current_type_ngram = (target_type.gram_1, target_type.gram_2, target_type.gram_3)
                 else:
-                    target_type = self.weighted_random(self.type_unigrams)
+                    target_type = self.__weighted_random(self.type_unigrams)
                     self.current_type_ngram = (target_type.gram_1,)
             except IndexError:
-                target_type = self.weighted_random(self.type_unigrams)
+                target_type = self.__weighted_random(self.type_unigrams)
                 self.current_type_ngram = (target_type.gram_1,)
-            next_sentence, current_character = self.get_sentence(context, self.current_type_ngram[-1], current_character)
+            next_sentence, current_character = self.__get_sentence(
+                payload,
+                context,
+                self.current_type_ngram[-1],
+                current_character
+            )
             payload += next_sentence
         return payload
 
     @staticmethod
     # Produce context/type by ngram probabilities
-    def weighted_random(l):
+    def __weighted_random(l):
         weighted_list = []
         for item in l:
             weighted_list += [item] * int(item.probability * 1000)
@@ -104,31 +131,31 @@ class DoubleMarkov:
         while len(full_context_sequence) < self.CONTEXT_COUNT_CEILING:
             try:
                 if len(self.current_context_ngram) == 1:
-                    target_context = self.weighted_random(self.context_bigrams.filter(
+                    target_context = self.__weighted_random(self.context_bigrams.filter(
                         gram_1=self.current_context_ngram[0]
                     ))
                     self.current_context_ngram = (target_context.gram_1, target_context.gram_2)
                 elif len(self.current_context_ngram) == 2:
-                    target_context = self.weighted_random(self.context_trigrams.filter(
+                    target_context = self.__weighted_random(self.context_trigrams.filter(
                         gram_1=self.current_context_ngram[0],
                         gram_2=self.current_context_ngram[1]
                     ))
                     self.current_context_ngram = (target_context.gram_1, target_context.gram_2, target_context.gram_3)
                 elif len(self.current_context_ngram) == 3:
-                    target_context = self.weighted_random(self.context_trigrams.filter(
+                    target_context = self.__weighted_random(self.context_trigrams.filter(
                         gram_1=self.current_context_ngram[1],
                         gram_2=self.current_context_ngram[2]
                     ))
                     self.current_context_ngram = (target_context.gram_1, target_context.gram_2, target_context.gram_3)
                 else:
-                    target_context = self.weighted_random(self.context_unigrams)
+                    target_context = self.__weighted_random(self.context_unigrams)
                     self.current_context_ngram = (target_context.gram_1,)
             except IndexError:
-                target_context = self.weighted_random(self.context_unigrams)
+                target_context = self.__weighted_random(self.context_unigrams)
                 self.current_context_ngram = (target_context.gram_1,)
             full_context_sequence.append(self.current_context_ngram[-1])
         return '{0}\n\nby: {1}\n\n\n\n\n\n-- Fade in from black --\n\n\n{2}\n\n\n-- End scene --\n'.format(
             self.title,
             self.author,
-            self.produce_sentences(full_context_sequence)
+            self.__produce_sentences(full_context_sequence)
         )
