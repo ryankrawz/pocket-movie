@@ -52,9 +52,7 @@ class SentenceGenerationRNN:
     def __initialize_model(self):
         last_checkpoint = tf.train.latest_checkpoint(self.CHECKPOINT_DIR)
         if not last_checkpoint:
-            raise Exception('Checkpoint for restoring model does not exist in \'{}\''.format(
-                self.CHECKPOINT_DIR
-            ))
+            return None
         vocab = sorted(set(self.__get_script_text()))
         model = self.__build_model(len(vocab), 1)
         model.load_weights(last_checkpoint).expect_partial()
@@ -101,6 +99,10 @@ class SentenceGenerationRNN:
         model.fit(dataset, epochs=self.EPOCHS, callbacks=[checkpoint_callback])
 
     def generate_text(self, start_string):
+        if not self.model:
+            raise Exception('Checkpoint for restoring model does not exist in \'{}\''.format(
+                self.CHECKPOINT_DIR
+            ))
         input_vector = [self.char_to_index[c] for c in start_string]
         input_vector = tf.expand_dims(input_vector, 0)
         payload = ''
