@@ -22,15 +22,15 @@ class SentenceGenerationRNN:
 
     def __init__(self):
         # Spin up neural language generation model
-        self.model = self.__initialize_model()
+        self.model = self._initialize_model()
         # Read in continuous text file of all scripts
-        self.training_text = self.__get_script_text()
+        self.training_text = self._get_script_text()
         # Determine language vocabulary
         self.vocab = sorted(set(self.training_text))
         # Map characters to integers in order to generate vectors
-        self.char_to_index, self.index_to_char = self.__map_chars(self.vocab)
+        self.char_to_index, self.index_to_char = self._map_chars(self.vocab)
 
-    def __build_model(self, vocab_size, batch_size):
+    def _build_model(self, vocab_size, batch_size):
         return tf.keras.Sequential([
             tf.keras.layers.Embedding(
                 vocab_size,
@@ -46,29 +46,29 @@ class SentenceGenerationRNN:
             tf.keras.layers.Dense(vocab_size)
         ])
 
-    def __get_script_text(self):
+    def _get_script_text(self):
         return open(self.PATH_TO_TRAINING_SCRIPT, 'rb').read().decode(encoding='utf-8')
 
-    def __initialize_model(self):
+    def _initialize_model(self):
         last_checkpoint = tf.train.latest_checkpoint(self.CHECKPOINT_DIR)
         if not last_checkpoint:
             return None
-        vocab = sorted(set(self.__get_script_text()))
-        model = self.__build_model(len(vocab), 1)
+        vocab = sorted(set(self._get_script_text()))
+        model = self._build_model(len(vocab), 1)
         model.load_weights(last_checkpoint).expect_partial()
         model.build(tf.TensorShape([1, None]))
         return model
 
     @staticmethod
-    def __loss(labels, logits):
+    def _loss(labels, logits):
         return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
     @staticmethod
-    def __map_chars(vocab):
+    def _map_chars(vocab):
         return {u: i for i, u in enumerate(vocab)}, np.array(vocab)
 
     @staticmethod
-    def __split_input_target(sequence):
+    def _split_input_target(sequence):
         return sequence[:-1], sequence[1:]
 
     def train_rnn(self):
@@ -83,13 +83,13 @@ class SentenceGenerationRNN:
         char_dataset = tf.data.Dataset.from_tensor_slices(vectorized_text)
         sequences = char_dataset.batch(self.INPUT_LENGTH + 1, drop_remainder=True)
         # Split training sequences into input and target text
-        dataset = sequences.map(self.__split_input_target)
+        dataset = sequences.map(self._split_input_target)
         # Shuffle training data
         dataset = dataset.shuffle(self.BUFFER_SIZE).batch(self.BATCH_SIZE, drop_remainder=True)
         # Construct model
-        model = self.__build_model(len(self.vocab), self.BATCH_SIZE)
+        model = self._build_model(len(self.vocab), self.BATCH_SIZE)
         # Configure training procedure
-        model.compile(optimizer='adam', loss=self.__loss)
+        model.compile(optimizer='adam', loss=self._loss)
         # Ensure checkpoints are stored
         checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=self.CHECKPOINT_PREFIX,
