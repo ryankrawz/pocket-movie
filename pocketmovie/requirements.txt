@@ -5,4 +5,4 @@ numpy==1.17.2
 pandas==0.25.1
 spacy==2.1.8
 setuptools==41.0.0
-tensorflow==1.15.0
+tensorflow==2.11.1
